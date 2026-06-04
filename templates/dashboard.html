@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard — InsightMY Analysis</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css">
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=DM+Serif+Display:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<style>
+    /* Mengelakkan kandungan daripada tenggelam di bawah navbar fixed */
+    .main-content {
+      padding-top: 20px;
+      min-height: 150vh;
+    }
+
+    /* 👇 KITA MASUKKAN KOD WARNA PREDICT DI SINI SUPAYA DATA.HTML TAHU 👇 */
+    .btn-predict {
+      background-color: #0f172a;
+      color: #ffffff !important;
+      border: 1px solid #0f172a;
+      transition: 0.3s ease;
+    }
+    .btn-predict:hover { 
+      background-color: #1e293b; 
+    }
+    [data-theme="dark"] .btn-predict { 
+      background-color: #52B788; 
+      color: #121212 !important; 
+      border-color: #52B788; 
+    }
+    [data-theme="dark"] .btn-predict:hover { 
+      background-color: #40916c; 
+    }
+  </style>
+<body>
+
+{% include 'header.html' %}
+
+<main>
+  <section class="page-hero full-screen">
+    <div class="container">
+      <div class="breadcrumb-custom" data-aos="fade-down">
+        <a href="/">Home</a><span class="sep">/</span><span>Dashboard</span>
+      </div>
+      <div class="row align-items-end">
+        <div class="col-lg-7" data-aos="fade-right">
+          <div class="page-hero-eyebrow"><i class="fas fa-chart-bar me-1"></i> Interactive Dashboard</div>
+          
+          <!-- UPDATED: Flex container to align Power BI logo and single-line title side-by-side -->
+          <div class="d-flex align-items-center gap-3 mb-3 flex-wrap">
+            <h1 class="page-hero-title mb-0">Malaysia Job Market Power BI Dashboard</h1>
+          </div>
+          
+          <p class="page-hero-desc">Explore real-time visualisations of hiring trends, salary distributions, skill demand, and geographic patterns derived from JobStreet advertisement data.</p>
+        <a href="/dashboard" class="btn btn-predict px-4 py-2 fw-bold text-decoration-none d-inline-flex align-items-center" style="border-radius:30px; font-size:0.9rem;">
+  <i class="fas fa-chart-bar me-2"></i> View Dashboard <i class="fas fa-arrow-right ms-2 small"></i>
+</a>
+        </div>
+        <div class="col-lg-5 mt-4 mt-lg-0" data-aos="fade-left">
+          <div class="d-flex flex-wrap gap-2">
+            <div class="card-custom p-3 d-flex align-items-center gap-2 flex-grow-1" style="min-width:140px">
+              <div class="card-icon mb-0" style="width:32px;height:32px;font-size:.8rem;flex-shrink:0"><i class="fas fa-filter"></i></div>
+              <div>
+                <div style="font-size:.72rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:.06em">Filters</div>
+                <div style="font-size:.85rem;font-weight:600">State, Industry</div>
+              </div>
+            </div>
+            <div class="card-custom p-3 d-flex align-items-center gap-2 flex-grow-1" style="min-width:140px">
+              <div class="card-icon mb-0" style="width:32px;height:32px;font-size:.8rem;flex-shrink:0;background:rgba(201,168,76,.12);color:var(--accent-gold)"><i class="fas fa-sync-alt"></i></div>
+              <div>
+                <div style="font-size:.72rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:.06em">Data</div>
+                <div style="font-size:.85rem;font-weight:600">2024–2025</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-pad-sm">
+    <div class="container-fluid px-4">
+      <div class="dashboard-embed-wrap" data-aos="fade-up">
+
+        <div class="dashboard-loader" id="dashboardLoader">
+          <div class="loader-spinner"></div>
+          <div class="loader-text">Loading Power BI Dashboard…</div>
+          <div style="font-size:.75rem;color:var(--text-muted);margin-top:4px;font-family:var(--ff-mono)">
+            Connecting to Power BI service
+          </div>
+        </div>
+
+        <div class="dashboard-iframe-wrap" id="dashboardIframeWrap">
+          <iframe
+            id="powerBiFrame"
+            src="https://app.powerbi.com/view?r=eyJrIjoiOTIwZmFhZGMtZTI3Zi00MTcyLTk0YjctZmY5ZmMyZTRhMmJlIiwidCI6ImNkY2JiMGUyLTlmZWEtNGY1NC04NjcwLTY3MjcwNzc5N2FkYSIsImMiOjEwfQ%3D%3D"
+            title="InsightMY Analysis — Malaysia Job Market Dashboard"
+            allowFullScreen="true">
+          </iframe>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <section class="section-pad bg-alt">
+    <div class="container">
+      <div class="text-center mb-5" data-aos="fade-up">
+        <span class="section-eyebrow">Dashboard Guide</span>
+        <h2 class="section-title">What You Can Explore</h2>
+        <p class="section-desc mx-auto">Use the Power BI filters and slicers to drill into the data.</p>
+      </div>
+      <div class="row g-4">
+        <div class="col-md-6 col-lg-3" data-aos="fade-up" data-aos-delay="0">
+          <div class="card-custom">
+            <div class="card-icon"><i class="fas fa-map-marked-alt"></i></div>
+            <div class="card-title">Geographic Hiring</div>
+            <div class="card-text">Compare job volumes and hiring rates across all 16 Malaysian states and territories.</div>
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-3" data-aos="fade-up" data-aos-delay="80">
+          <div class="card-custom">
+            <div class="card-icon" style="background:rgba(201,168,76,.12);color:var(--accent-gold)"><i class="fas fa-money-bill-wave"></i></div>
+            <div class="card-title">Salary Analysis</div>
+            <div class="card-text">View salary ranges by industry, job title, experience level, and employment type.</div>
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-3" data-aos="fade-up" data-aos-delay="160">
+          <div class="card-custom">
+            <div class="card-icon" style="background:rgba(212,87,42,.1);color:var(--accent-warm)"><i class="fas fa-tools"></i></div>
+            <div class="card-title">Skills Demand</div>
+            <div class="card-text">Discover the most in-demand technical and soft skills requested by Malaysian employers.</div>
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-3" data-aos="fade-up" data-aos-delay="240">
+          <div class="card-custom">
+            <div class="card-icon" style="background:rgba(82,183,136,.12);color:#52B788"><i class="fas fa-industry"></i></div>
+            <div class="card-title"> Category of Industry Breakdown</div>
+            <div class="card-text">Analyse hiring activity, growth trends, and compensation of job sectors.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+{% include 'footer.html' %}
+
+<button class="scroll-top" id="scrollTop" title="Back to top">
+  <i class="fas fa-arrow-up"></i>
+</button>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+<script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>

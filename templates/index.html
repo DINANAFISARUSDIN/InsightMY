@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>InsightMY Analysis — Malaysia Job Market Dashboard</title>
+  <meta name="description" content="Big Data-Driven Dashboard for Job Market Analysis in Malaysia using Kaggle Datasets.">
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=DM+Serif+Display:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+  {% include 'header.html' %}
+
+  <main>
+    <section class="hero-section">
+      <div class="hero-grid-bg"></div>
+      <div class="hero-gradient"></div>
+      <div class="container position-relative">
+        <div class="row align-items-center">
+
+          <div class="col-lg-6" data-aos="fade-right">
+            <div class="hero-eyebrow">
+              <i class="fas fa-chart-pie"></i>
+              Final Year Project &nbsp;·&nbsp; Malaysia
+            </div>
+            <h1 class="hero-title">
+              A Big Data Dashboard for <span class="accent-word">Job Market</span>
+              Analysis in <span class="gold-word">Malaysia</span>
+            </h1>
+            <p class="hero-desc">
+              InsightMY Analysis transforms Kaggle datasets into actionable intelligence —
+              revealing hiring trends, salary benchmarks, and in-demand skills across Malaysia's evolving job market.
+            </p>
+            <div class="d-flex flex-wrap gap-3">
+              <a href="/dashboard" class="btn-primary-custom">
+                <i class="fas fa-chart-bar"></i> View Dashboard
+              </a>
+              <a href="/data" class="btn-outline-custom">
+                <i class="fas fa-database"></i> Explore Data
+              </a>
+            </div>
+          </div>
+
+          <div class="col-lg-6" data-aos="fade-left" data-aos-delay="150">
+            <div class="hero-visual">
+
+              <div class="hero-card-float">
+                <div class="card-label">
+                  <i class="fas fa-chart-bar me-1"></i> Top Hiring States — Malaysia
+                </div>
+                
+                <div class="bar-row">
+                  <span class="bar-label">Selangor</span>
+                  <div class="bar-track"><div class="bar-fill" data-width="34.15%"></div></div>
+                  <span class="bar-val">34.15%</span>
+                </div>
+                <div class="bar-row">
+                  <span class="bar-label">KL</span>
+                  <div class="bar-track"><div class="bar-fill" data-width="31.76%" style="background:var(--accent-light)"></div></div>
+                  <span class="bar-val">31.76%</span>
+                </div>
+                <div class="bar-row">
+                  <span class="bar-label">Johor</span>
+                  <div class="bar-track"><div class="bar-fill" data-width="10.98%" style="background:var(--accent-gold)"></div></div>
+                  <span class="bar-val">10.98%</span>
+                </div>
+                <div class="bar-row">
+                  <span class="bar-label">Penang</span>
+                  <div class="bar-track"><div class="bar-fill" data-width="9.35%" style="background:var(--accent-warm)"></div></div>
+                  <span class="bar-val">9.35%</span>
+                </div>
+                <div class="bar-row">
+                  <span class="bar-label">Sarawak</span>
+                  <div class="bar-track"><div class="bar-fill" data-width="2.96%" style="background:#8B9A6E"></div></div>
+                  <span class="bar-val">2.96%</span>
+                </div>
+                
+                <div class="mt-3 pt-2" style="border-top:1px solid var(--border); font-size:.72rem; color:var(--text-muted); font-family:var(--ff-mono)">
+                  SOURCE: Kaggle · Dataset 2024–2025
+                </div>
+              </div>
+              
+              <div class="float-badge badge-br">
+                <i class="fas fa-bolt" style="color:var(--accent-gold)"></i> Live Power BI
+              </div>
+            </div>
+          </div>
+
+        </div></div>
+    </section>
+
+    <section class="stat-band" data-aos="fade-up">
+      <div class="container">
+        <div class="row g-4 text-center align-items-center">
+          <div class="col-md-3 col-6 stat-band-item">
+            <div class="stat-band-num" data-count="50000" data-suffix="+">0+</div>
+            <div class="stat-band-label">Job Listings</div>
+          </div>
+          <div class="col-md-3 col-6 stat-band-item">
+            <div class="stat-band-num" data-count="16" data-suffix="">0</div>
+            <div class="stat-band-label">States in Malaysia</div>
+          </div>
+          <div class="col-md-3 col-6 stat-band-item">
+            <div class="stat-band-num" data-count="10" data-suffix="+">0+</div>
+            <div class="stat-band-label">Categories Analysed</div>
+          </div>
+          <div class="col-md-3 col-6">
+            <a href="/dashboard" class="btn-primary-custom" style="background:#fff;color:var(--accent)">
+              <i class="fas fa-external-link-alt"></i> Open Dashboard
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-pad bg-alt">
+      <div class="container">
+        <div class="row align-items-center g-5">
+          <div class="col-lg-5" data-aos="fade-right">
+            <span class="section-eyebrow">About This Project</span>
+            <h2 class="section-title">Understanding Malaysia's Job Market at Scale</h2>
+            <p class="section-desc">
+              InsightMY Analysis processes rich Kaggle datasets to surface clear, data-backed
+              insights on hiring patterns, salary distributions, skill demands, and industry growth — presented through
+              an interactive Power BI dashboard.
+            </p>
+            <div class="mt-4 d-flex flex-wrap gap-2">
+              <span class="attr-tag"><i class="fas fa-check-circle me-1"></i>Big Data Analysis</span>
+              <span class="attr-tag"><i class="fas fa-check-circle me-1"></i>Interactive Visuals</span>
+              <span class="attr-tag"><i class="fas fa-check-circle me-1"></i>Kaggle Datasets</span>
+              <span class="attr-tag"><i class="fas fa-check-circle me-1"></i>Malaysia-Focused</span>
+            </div>
+          </div>
+          
+          <div class="col-lg-7">
+            <div class="row g-3">
+              <div class="col-sm-6" data-aos="fade-up" data-aos-delay="0">
+                <div class="card-custom">
+                  <div class="card-icon card-icon-lg"><i class="fas fa-database"></i></div>
+                  <div class="card-title">Data Collection</div>
+                  <div class="card-text">Sourced structured job listing data from comprehensive Kaggle datasets covering all major Malaysian states.</div>
+                </div>
+              </div>
+              <div class="col-sm-6" data-aos="fade-up" data-aos-delay="80">
+                <div class="card-custom">
+                  <div class="card-icon card-icon-lg" style="background:rgba(201,168,76,.12);color:var(--accent-gold)"><i class="fas fa-cogs"></i></div>
+                  <div class="card-title">Data Processing</div>
+                  <div class="card-text">Cleaned, transformed, and enriched the raw data using Python pipelines to ensure accuracy and analysis-readiness.</div>
+                </div>
+              </div>
+              <div class="col-sm-6" data-aos="fade-up" data-aos-delay="160">
+                <div class="card-custom">
+                  <div class="card-icon card-icon-lg" style="background:rgba(212,87,42,.1);color:var(--accent-warm)"><i class="fas fa-chart-pie"></i></div>
+                  <div class="card-title">Dashboard Insights</div>
+                  <div class="card-text">Visualised key findings in Power BI with filters for state, industry, salary range, and job type.</div>
+                </div>
+              </div>
+              <div class="col-sm-6" data-aos="fade-up" data-aos-delay="240">
+                <div class="card-custom">
+                  <div class="card-icon card-icon-lg" style="background:rgba(82,183,136,.12);color:#52B788"><i class="fas fa-lightbulb"></i></div>
+                  <div class="card-title">Actionable Results</div>
+                  <div class="card-text">Surface hiring trends, top skills, and salary benchmarks to help job seekers and researchers alike.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-pad">
+      <div class="container">
+        <div class="text-center mb-5" data-aos="fade-up">
+          <span class="section-eyebrow">System Overview</span>
+          <h2 class="section-title">From Raw Listings to Rich Insights</h2>
+          <p class="section-desc mx-auto">The end-to-end pipeline powering InsightMY Analysis.</p>
+        </div>
+        
+        <div class="row justify-content-center" data-aos="fade-up" data-aos-delay="100">
+          <div class="col-xl-10">
+            <div class="d-flex flex-wrap justify-content-center align-items-center gap-2">
+              
+              <div class="workflow-step" data-aos="zoom-in" data-aos-delay="0">
+                <div class="workflow-icon"><i class="fab fa-kaggle"></i></div>
+                <div class="workflow-label">Kaggle<br>Dataset</div>
+              </div>
+              <div class="workflow-arrow"><i class="fas fa-arrow-right"></i></div>
+              
+              <div class="workflow-step" data-aos="zoom-in" data-aos-delay="100">
+                <div class="workflow-icon"><i class="fas fa-broom"></i></div>
+                <div class="workflow-label">Data<br>Cleaning</div>
+              </div>
+              <div class="workflow-arrow"><i class="fas fa-arrow-right"></i></div>
+              
+              <div class="workflow-step" data-aos="zoom-in" data-aos-delay="200">
+                <div class="workflow-icon"><i class="fas fa-cogs"></i></div>
+                <div class="workflow-label">Data<br>Processing</div>
+              </div>
+              <div class="workflow-arrow"><i class="fas fa-arrow-right"></i></div>
+              
+              <div class="workflow-step" data-aos="zoom-in" data-aos-delay="300">
+                <div class="workflow-icon" style="background:var(--accent);color:#fff;border-color:var(--accent)"><i class="fas fa-chart-bar"></i></div>
+                <div class="workflow-label">Data<br>Visualization</div>
+              </div>
+              
+            </div>
+            
+            <div class="row g-3 mt-4 justify-content-center">
+              <div class="col-md-3 col-6" data-aos="fade-up" data-aos-delay="50">
+                <div class="card-custom p-3 text-center">
+                  <div style="font-size:.72rem;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:.06em">Step 1</div>
+                  <div style="font-size:.85rem;font-weight:600;margin-top:4px">Source (Kaggle)</div>
+                </div>
+              </div>
+              <div class="col-md-3 col-6" data-aos="fade-up" data-aos-delay="100">
+                <div class="card-custom p-3 text-center">
+                  <div style="font-size:.72rem;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:.06em">Step 2</div>
+                  <div style="font-size:.85rem;font-weight:600;margin-top:4px">Clean Data</div>
+                </div>
+              </div>
+              <div class="col-md-3 col-6" data-aos="fade-up" data-aos-delay="150">
+                <div class="card-custom p-3 text-center">
+                  <div style="font-size:.72rem;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:.06em">Step 3</div>
+                  <div style="font-size:.85rem;font-weight:600;margin-top:4px">Process Data</div>
+                </div>
+              </div>
+              <div class="col-md-3 col-6" data-aos="fade-up" data-aos-delay="200">
+                <div class="card-custom p-3 text-center" style="border-color:var(--accent)">
+                  <div style="font-size:.72rem;font-weight:600;color:var(--accent);text-transform:uppercase;letter-spacing:.06em">Step 4</div>
+                  <div style="font-size:.85rem;font-weight:600;margin-top:4px;color:var(--accent)">Visualise</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  {% include 'footer.html' %}
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+  
+  <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>

@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Job Salary Predictor — InsightMY Analysis</title>
+  
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css">
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=DM+Serif+Display:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  
+  <style>
+    /* ── Khas untuk Full Screen Hero (Kekal Warna Asal) ── */
+    .page-hero.full-screen {
+      min-height: calc(100vh - var(--nav-h)); /* Penuh skrin ditolak tinggi navbar */
+      display: flex;
+      align-items: center;                    /* Kandungan duduk tengah menegak */
+      padding: 60px 0;
+      box-sizing: border-box;
+      background: var(--bg-alt) !important;   /* Kekal warna latar asal (Soft Water Blue) */
+      border-bottom: 1px solid var(--border);
+    }
+    .page-hero.full-screen .container {
+      width: 100%;
+    }
+    .hero-title-large {
+      font-family: 'DM Serif Display', serif;
+      font-size: 3rem;
+      line-height: 1.15;
+      color: var(--text);
+      margin-bottom: 15px;
+    }
+    .hero-desc-large {
+      font-size: 1.05rem;
+      color: var(--text-muted);
+      max-width: 700px;
+      line-height: 1.6;
+    }
+
+    /* ── Sempadan Seterusnya: Bahagian Isi Borang ── */
+    .predictor-section {
+      padding: 60px 0;
+      background: var(--bg); /* Warna latar bersambung munasabah */
+    }
+
+    /* ── Language toggle cards ── */
+    .lang-check-group {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+    }
+    .lang-card {
+      border: 1px solid rgba(0,0,0,0.08);
+      border-radius: 8px;
+      padding: 7px 6px;
+      text-align: center;
+      font-size: 0.82rem;
+      background: var(--bg-body);
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .lang-card:hover { border-color: var(--accent-gold); }
+    .form-check-input:checked + .lang-label .lang-card {
+      background: rgba(201,168,76,0.08);
+      border-color: var(--accent-gold);
+      font-weight: 600;
+    }
+
+    /* ── Result card ── */
+    .result-sticky-card {
+      position: sticky;
+      top: 80px;
+      border-top: 4px solid #52B788 !important;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.04);
+    }
+    .salary-box {
+      background: rgba(0,0,0,0.02);
+      border-radius: 10px;
+      padding: 12px;
+      height: 100%;
+    }
+    [data-theme="dark"] .salary-box { background: rgba(255,255,255,0.03); }
+
+    /* ── Select ── */
+    select.form-select {
+      background-color: var(--bg-body);
+      color: var(--text);
+      border-color: rgba(0,0,0,0.1);
+      padding-top: 7px;
+      padding-bottom: 7px;
+      font-size: 0.88rem;
+    }
+    select.form-select option { background-color: #ffffff; color: #000000; }
+    [data-theme="dark"] select.form-select { border-color: rgba(255,255,255,0.2); }
+    [data-theme="dark"] select.form-select option { background-color: #121212; color: #ffffff; }
+
+    /* ── Buttons ── */
+    .btn-clear-red {
+      border: 1px solid #dc3545;
+      background: transparent;
+      color: #dc3545;
+      transition: 0.3s ease;
+    }
+    .btn-clear-red:hover { background: #dc3545; color: white; }
+    [data-theme="dark"] .btn-clear-red { border-color: #ff6b6b; color: #ff6b6b; }
+    [data-theme="dark"] .btn-clear-red:hover { background: #ff6b6b; color: #121212; }
+
+    .btn-predict {
+      background-color: #0f172a;
+      color: #ffffff !important;
+      border: 1px solid #0f172a;
+    }
+    .btn-predict:hover { background-color: #1e293b; }
+    [data-theme="dark"] .btn-predict { background-color: #52B788; color: #121212 !important; border-color: #52B788; }
+    [data-theme="dark"] .btn-predict:hover { background-color: #40916c; }
+
+    /* ── Tips ── */
+    .tip-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 7px;
+      margin-top: 8px;
+    }
+    .tip-mini-card {
+      background: rgba(0,0,0,0.02);
+      border: 1px solid rgba(0,0,0,0.06);
+      border-radius: 8px;
+      padding: 9px 11px;
+    }
+    [data-theme="dark"] .tip-mini-card {
+      background: rgba(255,255,255,0.03);
+      border-color: rgba(255,255,255,0.07);
+    }
+    .tip-mini-card p { margin: 0; }
+    .tip-title { font-size: 0.76rem; font-weight: 700; color: var(--text); margin-bottom: 2px !important; }
+    .tip-desc  { font-size: 0.7rem; color: var(--text-muted); line-height: 1.42; }
+
+    /* ── Badges ── */
+    .cat-badge {
+      display: inline-block;
+      background: rgba(82,183,136,0.12);
+      color: #2d6a4f;
+      border: 1px solid rgba(82,183,136,0.25);
+      border-radius: 20px;
+      font-size: 0.68rem;
+      font-weight: 500;
+      padding: 3px 9px;
+    }
+    [data-theme="dark"] .cat-badge {
+      background: rgba(82,183,136,0.15);
+      color: #74c69d;
+      border-color: rgba(82,183,136,0.3);
+    }
+
+    /* ── Misc ── */
+    .sec-divider {
+      border: none;
+      border-top: 1px solid rgba(0,0,0,0.07);
+      margin: 9px 0;
+    }
+    [data-theme="dark"] .sec-divider { border-color: rgba(255,255,255,0.07); }
+    .eyebrow-label {
+      font-size: 0.68rem;
+      text-transform: uppercase;
+      font-weight: 700;
+      letter-spacing: 0.07em;
+      color: var(--text-muted);
+      margin-bottom: 5px;
+    }
+    .form-label-compact {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      font-weight: 700;
+      color: var(--text-muted);
+      margin-bottom: 3px;
+      display: block;
+    }
+    
+    @media (max-width: 768px) {
+      .hero-title-large { font-size: 2.2rem; }
+      .tip-row { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+{% include 'header.html' %}
+
+<main>
+  <section class="page-hero full-screen">
+    <div class="container">
+      <div class="breadcrumb-custom" data-aos="fade-down">
+        <a href="/">Home</a><span class="sep">/</span><span>Prediction</span>
+      </div>
+      
+      <div class="mini-eyebrow mb-2" data-aos="fade-down" data-aos-delay="100">
+        <i class="fas fa-robot text-gold me-1"></i> Machine Learning Predictive Engine
+      </div>
+      
+      <h1 class="hero-title-large" data-aos="fade-right" data-aos-delay="200">
+        Job Salary Predictor
+      </h1>
+      
+      <p class="hero-desc-large mb-4" data-aos="fade-right" data-aos-delay="300">
+        Estimate your true market worth with pinpoint accuracy using our predictive algorithm trained on real, comprehensive JobStreet Malaysia advertisement logs. By benchmarking data across specialized sectors, certification levels, regional economic states, and language preferences, you can uncover key salary trends and approach future career choices with absolute confidence.
+      </p>
+      
+      <div data-aos="fade-up" data-aos-delay="400">
+        <a href="#predictor-tool" class="btn btn-predict px-4 py-2.5 fw-bold text-decoration-none d-inline-flex align-items-center" style="border-radius:30px; font-size:0.9rem;">
+          <i class="fas fa-sliders-h me-2"></i> Open Prediction Tool <i class="fas fa-arrow-down ms-2 small"></i>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="predictor-section" id="predictor-tool">
+    <div class="container">
+      <div class="row g-3 justify-content-center">
+
+        <div class="col-lg-7" data-aos="fade-up">
+          <div class="card-custom p-3 p-md-4 shadow-sm">
+
+            <div class="d-flex align-items-center gap-2 mb-3">
+              <div class="card-icon mb-0" style="background:rgba(201,168,76,.12);color:var(--accent-gold);width:34px;height:34px;font-size:0.85rem;">
+                <i class="fas fa-sliders-h"></i>
+              </div>
+              <h3 class="card-title mb-0" style="font-family:'DM Serif Display',serif;font-size:1.25rem;">Enter Job Details</h3>
+            </div>
+
+            <form id="predictForm" action="/predict" method="POST">
+              <div class="row g-2">
+
+                <div class="col-md-6">
+                  <label class="form-label-compact"><i class="fas fa-th-large me-1"></i> Job Category</label>
+                  <select class="form-select" name="category" required>
+                    <option value="" disabled {{ 'selected' if not sel_category else '' }}>Select Category...</option>
+                    <option value="Accounting" {{ 'selected' if sel_category == 'Accounting' else '' }}>Accounting</option>
+                    <option value="Administration Office Support" {{ 'selected' if sel_category == 'Administration Office Support' else '' }}>Administration Office Support</option>
+                    <option value="Advertising Arts Media" {{ 'selected' if sel_category == 'Advertising Arts Media' else '' }}>Advertising Arts Media</option>
+                    <option value="Banking Financial Services" {{ 'selected' if sel_category == 'Banking Financial Services' else '' }}>Banking Financial Services</option>
+                    <option value="Call Centre Customer Service" {{ 'selected' if sel_category == 'Call Centre Customer Service' else '' }}>Call Centre Customer Service</option>
+                    <option value="Ceo General Management" {{ 'selected' if sel_category == 'Ceo General Management' else '' }}>Ceo General Management</option>
+                    <option value="Community Services Development" {{ 'selected' if sel_category == 'Community Services Development' else '' }}>Community Services Development</option>
+                    <option value="Construction" {{ 'selected' if sel_category == 'Construction' else '' }}>Construction</option>
+                    <option value="Consulting Strategy" {{ 'selected' if sel_category == 'Consulting Strategy' else '' }}>Consulting Strategy</option>
+                    <option value="Design Architecture" {{ 'selected' if sel_category == 'Design Architecture' else '' }}>Design Architecture</option>
+                    <option value="Education Training" {{ 'selected' if sel_category == 'Education Training' else '' }}>Education Training</option>
+                    <option value="Engineering" {{ 'selected' if sel_category == 'Engineering' else '' }}>Engineering</option>
+                    <option value="Farming Animals Conservation" {{ 'selected' if sel_category == 'Farming Animals Conservation' else '' }}>Farming Animals Conservation</option>
+                    <option value="Government Defence" {{ 'selected' if sel_category == 'Government Defence' else '' }}>Government Defence</option>
+                    <option value="Healthcare Medical" {{ 'selected' if sel_category == 'Healthcare Medical' else '' }}>Healthcare Medical</option>
+                    <option value="Hospitality Tourism" {{ 'selected' if sel_category == 'Hospitality Tourism' else '' }}>Hospitality Tourism</option>
+                    <option value="Human Resources Recruitment" {{ 'selected' if sel_category == 'Human Resources Recruitment' else '' }}>Human Resources Recruitment</option>
+                    <option value="Information Communication Technology" {{ 'selected' if sel_category == 'Information Communication Technology' else '' }}>Information Communication Technology</option>
+                    <option value="Insurance Superannuation" {{ 'selected' if sel_category == 'Insurance Superannuation' else '' }}>Insurance Superannuation</option>
+                    <option value="Legal" {{ 'selected' if sel_category == 'Legal' else '' }}>Legal</option>
+                    <option value="Manufacturing Transport Logistics" {{ 'selected' if sel_category == 'Manufacturing Transport Logistics' else '' }}>Manufacturing Transport Logistics</option>
+                    <option value="Marketing Communications" {{ 'selected' if sel_category == 'Marketing Communications' else '' }}>Marketing Communications</option>
+                    <option value="Mining Resources Energy" {{ 'selected' if sel_category == 'Mining Resources Energy' else '' }}>Mining Resources Energy</option>
+                    <option value="Real Estate Property" {{ 'selected' if sel_category == 'Real Estate Property' else '' }}>Real Estate Property</option>
+                    <option value="Retail Consumer Products" {{ 'selected' if sel_category == 'Retail Consumer Products' else '' }}>Retail Consumer Products</option>
+                    <option value="Sales" {{ 'selected' if sel_category == 'Sales' else '' }}>Sales</option>
+                    <option value="Science Technology" {{ 'selected' if sel_category == 'Science Technology' else '' }}>Science Technology</option>
+                    <option value="Self Employment" {{ 'selected' if sel_category == 'Self Employment' else '' }}>Self Employment</option>
+                    <option value="Sport Recreation" {{ 'selected' if sel_category == 'Sport Recreation' else '' }}>Sport Recreation</option>
+                    <option value="Trades Services" {{ 'selected' if sel_category == 'Trades Services' else '' }}>Trades Services</option>
+                  </select>
+                </div>
+
+                <div class="col-md-6">
+                  <label class="form-label-compact"><i class="fas fa-layer-group me-1"></i> Job Level</label>
+                  <select class="form-select" name="job_level" required>
+                    <option value="" disabled {{ 'selected' if not sel_level else '' }}>Select Level...</option>
+                    <option value="Junior"  {{ 'selected' if sel_level == 'Junior'  else '' }}>Junior</option>
+                    <option value="Mid"     {{ 'selected' if sel_level == 'Mid'     else '' }}>Mid</option>
+                    <option value="Senior"  {{ 'selected' if sel_level == 'Senior'  else '' }}>Senior</option>
+                    <option value="Manager" {{ 'selected' if sel_level == 'Manager' else '' }}>Manager</option>
+                  </select>
+                </div>
+
+                <div class="col-md-6">
+                  <label class="form-label-compact"><i class="fas fa-map-marker-alt me-1"></i> Location (State)</label>
+                  <select class="form-select" name="state" required>
+                    <option value="" disabled {{ 'selected' if not sel_state else '' }}>Select State...</option>
+                    <option value="Johor"           {{ 'selected' if sel_state == 'Johor'           else '' }}>Johor</option>
+                    <option value="Kedah"           {{ 'selected' if sel_state == 'Kedah'           else '' }}>Kedah</option>
+                    <option value="Kelantan"        {{ 'selected' if sel_state == 'Kelantan'        else '' }}>Kelantan</option>
+                    <option value="Kuala Lumpur"    {{ 'selected' if sel_state == 'Kuala Lumpur'    else '' }}>Kuala Lumpur</option>
+                    <option value="Labuan"          {{ 'selected' if sel_state == 'Labuan'          else '' }}>Labuan</option>
+                    <option value="Melaka"          {{ 'selected' if sel_state == 'Melaka'          else '' }}>Melaka</option>
+                    <option value="Negeri Sembilan" {{ 'selected' if sel_state == 'Negeri Sembilan' else '' }}>Negeri Sembilan</option>
+                    <option value="Pahang"          {{ 'selected' if sel_state == 'Pahang'          else '' }}>Pahang</option>
+                    <option value="Penang"          {{ 'selected' if sel_state == 'Penang'          else '' }}>Penang</option>
+                    <option value="Perak"           {{ 'selected' if sel_state == 'Perak'           else '' }}>Perak</option>
+                    <option value="Perlis"          {{ 'selected' if sel_state == 'Perlis'          else '' }}>Perlis</option>
+                    <option value="Putrajaya"       {{ 'selected' if sel_state == 'Putrajaya'       else '' }}>Putrajaya</option>
+                    <option value="Sabah"           {{ 'selected' if sel_state == 'Sabah'           else '' }}>Sabah</option>
+                    <option value="Sarawak"         {{ 'selected' if sel_state == 'Sarawak'         else '' }}>Sarawak</option>
+                    <option value="Selangor"        {{ 'selected' if sel_state == 'Selangor'        else '' }}>Selangor</option>
+                    <option value="Terengganu"      {{ 'selected' if sel_state == 'Terengganu'      else '' }}>Terengganu</option>
+                  </select>
+                </div>
+
+                <div class="col-md-6">
+                  <label class="form-label-compact"><i class="fas fa-graduation-cap me-1"></i> Education Level</label>
+                  <select class="form-select" name="education" required>
+                    <option value="" disabled {{ 'selected' if not sel_education else '' }}>Select Education...</option>
+                    <option value="SPM/Certificate" {{ 'selected' if sel_education == 'SPM/Certificate' else '' }}>SPM</option>
+                    <option value="Diploma"         {{ 'selected' if sel_education == 'Diploma'         else '' }}>Diploma</option>
+                    <option value="Bachelor"        {{ 'selected' if sel_education == 'Bachelor'        else '' }}>Degree</option>
+                    <option value="Master"          {{ 'selected' if sel_education == 'Master'          else '' }}>Master</option>
+                    <option value="PhD"             {{ 'selected' if sel_education == 'PhD'             else '' }}>PhD</option>
+                  </select>
+                </div>
+
+                <div class="col-12">
+                  <label class="form-label-compact"><i class="fas fa-language me-1"></i> Language Requirements (Optional)</label>
+                  <div class="lang-check-group">
+                    <div class="position-relative">
+                      <input class="form-check-input d-none" type="checkbox" name="req_malay"    value="1" id="malay"    {{ 'checked' if req_malay    else '' }}>
+                      <label class="w-100 lang-label" for="malay"><div class="lang-card">Malay</div></label>
+                    </div>
+                    <div class="position-relative">
+                      <input class="form-check-input d-none" type="checkbox" name="req_english"  value="1" id="english"  {{ 'checked' if req_english  else '' }}>
+                      <label class="w-100 lang-label" for="english"><div class="lang-card">English</div></label>
+                    </div>
+                    <div class="position-relative">
+                      <input class="form-check-input d-none" type="checkbox" name="req_mandarin" value="1" id="mandarin" {{ 'checked' if req_mandarin else '' }}>
+                      <label class="w-100 lang-label" for="mandarin"><div class="lang-card">Mandarin</div></label>
+                    </div>
+                    <div class="position-relative">
+                      <input class="form-check-input d-none" type="checkbox" name="req_japanese" value="1" id="japanese" {{ 'checked' if req_japanese else '' }}>
+                      <label class="w-100 lang-label" for="japanese"><div class="lang-card">Japanese</div></label>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-12 mt-1">
+                  <div class="d-flex align-items-stretch gap-2">
+                    <a href="/salary#predictor-tool" class="btn btn-clear-red fw-bold text-decoration-none d-flex align-items-center justify-content-center px-4"
+   style="border-radius:8px;font-size:0.9rem;width:120px;">
+  <i class="fas fa-eraser me-2"></i> Clear
+</a>
+                    <button type="submit" class="btn btn-predict fw-bold flex-grow-1 d-flex align-items-center justify-content-center py-2"
+                            style="border-radius:8px;font-size:0.95rem;">
+                      <i class="fas fa-magic me-2"></i> Predict Salary
+                    </button>
+                  </div>
+                </div>
+
+                <div class="col-12">
+                  <hr class="sec-divider mt-2">
+                  <p class="eyebrow-label"><i class="fas fa-lightbulb me-1"></i> Tips for better predictions</p>
+                  <div class="tip-row">
+                    <div class="tip-mini-card">
+                      <p class="tip-title"><i class="fas fa-chart-line text-success me-1"></i> Job Level</p>
+                      <p class="tip-desc">Senior &amp; Manager roles have significantly higher predicted salaries across all categories.</p>
+                    </div>
+                    <div class="tip-mini-card">
+                      <p class="tip-title"><i class="fas fa-map-marker-alt text-primary me-1"></i> Location</p>
+                      <p class="tip-desc">KL and Selangor consistently offer the highest salary ranges in Malaysia.</p>
+                    </div>
+                    <div class="tip-mini-card">
+                      <p class="tip-title"><i class="fas fa-language text-warning me-1"></i> Language</p>
+                      <p class="tip-desc">Mandarin &amp; English requirements are linked to higher pay in most fields.</p>
+                    </div>
+                    <div class="tip-mini-card">
+                      <p class="tip-title"><i class="fas fa-graduation-cap text-danger me-1"></i> Education</p>
+                      <p class="tip-desc">Master's &amp; PhD holders earn a notable premium in ICT, Engineering &amp; Healthcare.</p>
+                    </div>
+                  </div>
+
+                  <p class="mb-0 mt-2" style="font-size:0.67rem;color:var(--text-muted);line-height:1.5;">
+                    <i class="fas fa-info-circle text-primary me-1"></i>
+                    Data sourced from JobStreet Malaysia listings. Predictions reflect historical averages and may vary based on company size, skills, and market conditions.
+                  </p>
+                </div>
+
+              </div>
+            </form>
+          </div>
+        </div>
+
+        {% if avg_salary %}
+        <div class="col-lg-5" data-aos="zoom-in" data-aos-delay="100">
+          <div class="card-custom p-4 text-center result-sticky-card">
+            <div class="mb-2 text-success" style="font-size:1.8rem;"><i class="fas fa-wallet"></i></div>
+            <h3 class="mb-3" style="font-family:'DM Serif Display',serif;font-size:1.4rem;">Predicted Salary Range</h3>
+
+            <div class="row g-2 mb-3">
+              <div class="col-6">
+                <div class="salary-box">
+                  <p class="mb-1 text-uppercase" style="font-size:0.68rem;color:var(--text-muted);font-weight:700;letter-spacing:0.05em;">Minimum</p>
+                  <h4 class="mb-0 text-success fw-700" style="font-size:1.1rem;">RM {{ min_salary }}</h4>
+                </div>
+              </div>
+              <div class="col-6">
+                <div class="salary-box">
+                  <p class="mb-1 text-uppercase" style="font-size:0.68rem;color:var(--text-muted);font-weight:700;letter-spacing:0.05em;">Maximum</p>
+                  <h4 class="mb-0 text-success fw-700" style="font-size:1.1rem;">RM {{ max_salary }}</h4>
+                </div>
+              </div>
+              <div class="col-12">
+                <div class="salary-box py-3" style="border:1px dashed var(--accent-gold);background:rgba(201,168,76,0.03);">
+                  <p class="mb-1 text-uppercase fw-700" style="font-size:0.72rem;color:var(--accent-gold);letter-spacing:0.05em;">Estimated Average</p>
+                  <h2 class="mb-0 fw-800" style="color:var(--text);font-family:'JetBrains Mono',monospace;font-size:1.9rem;">RM {{ avg_salary }}</h2>
+                </div>
+              </div>
+            </div>
+
+            <hr class="my-3" style="border-color:rgba(0,0,0,0.1);">
+            <div class="text-start px-1">
+              <h6 class="fw-bold mb-2" style="font-size:0.72rem;text-transform:uppercase;color:var(--text-muted);letter-spacing:0.05em;">
+                <i class="fas fa-chart-pie me-1"></i> Prediction Insights
+              </h6>
+              <ul class="list-unstyled mb-0" style="font-size:0.85rem;color:var(--text);">
+                <li class="mb-2 d-flex align-items-start">
+                  <i class="fas fa-user-tie text-primary mt-1 me-2" style="width:14px;font-size:0.8rem;"></i>
+                  <span><strong>Profile:</strong> {{ sel_level }} Level, {{ sel_state }}</span>
+                </li>
+                <li class="mb-2 d-flex align-items-start">
+                  <i class="fas fa-graduation-cap text-warning mt-1 me-2" style="width:14px;font-size:0.8rem;"></i>
+                  <span><strong>Education:</strong> {{ sel_education }}</span>
+                </li>
+                <li class="mb-2 d-flex align-items-start">
+                  <i class="fas fa-bullseye text-danger mt-1 me-2" style="width:14px;font-size:0.8rem;"></i>
+                  <span><strong>Model Confidence:</strong> {{ confidence_score | default('87%') }}</span>
+                </li>
+                <li class="d-flex align-items-start">
+                  <i class="fas fa-arrow-trend-up text-success mt-1 me-2" style="width:14px;font-size:0.8rem;"></i>
+                  <span><strong>Market Demand:</strong> {{ market_trend | default('High / Competitive') }}</span>
+                </li>
+              </ul>
+            </div>
+
+            <div class="mt-3 p-2 rounded-3" style="background:rgba(0,0,0,0.02);font-size:0.7rem;color:var(--text-muted);line-height:1.5;">
+              <i class="fas fa-info-circle me-1 text-primary"></i>
+              Estimated from a machine learning model trained on historical JobStreet Malaysia data.
+            </div>
+          </div>
+        </div>
+
+        {% else %}
+
+        <div class="col-lg-5" data-aos="zoom-in" data-aos-delay="100">
+          <div class="card-custom p-4 text-center result-sticky-card" style="border-top-color:rgba(82,183,136,0.35) !important;">
+            <div class="mb-2" style="font-size:2.2rem;opacity:0.15;"><i class="fas fa-wallet"></i></div>
+            <h5 class="mb-1" style="font-family:'DM Serif Display',serif;font-size:1.15rem;color:var(--text);">Your Salary Prediction</h5>
+            <p style="font-size:0.78rem;color:var(--text-muted);max-width:210px;margin:0 auto 16px;">
+              Fill in the form and click <strong>Predict Salary</strong> to see your estimated range.
+            </p>
+
+            <div class="d-flex flex-column gap-2 text-start">
+              <div class="d-flex align-items-center gap-2 p-2 rounded-3"
+                   style="background:rgba(0,0,0,0.02);border:1px dashed rgba(0,0,0,0.08);">
+                <i class="fas fa-circle-check text-success" style="font-size:0.85rem;"></i>
+                <span style="font-size:0.76rem;color:var(--text-muted);">Minimum salary estimate</span>
+              </div>
+              <div class="d-flex align-items-center gap-2 p-2 rounded-3"
+                   style="background:rgba(0,0,0,0.02);border:1px dashed rgba(0,0,0,0.08);">
+                <i class="fas fa-circle-check text-success" style="font-size:0.85rem;"></i>
+                <span style="font-size:0.76rem;color:var(--text-muted);">Maximum salary estimate</span>
+              </div>
+              <div class="d-flex align-items-center gap-2 p-2 rounded-3"
+                   style="background:rgba(201,168,76,0.05);border:1px dashed rgba(201,168,76,0.3);">
+                <i class="fas fa-star" style="font-size:0.85rem;color:var(--accent-gold);"></i>
+                <span style="font-size:0.76rem;color:var(--text-muted);">Estimated average salary</span>
+              </div>
+              <div class="d-flex align-items-center gap-2 p-2 rounded-3"
+                   style="background:rgba(0,0,0,0.02);border:1px dashed rgba(0,0,0,0.08);">
+                <i class="fas fa-chart-pie text-primary" style="font-size:0.85rem;"></i>
+                <span style="font-size:0.76rem;color:var(--text-muted);">Prediction insights &amp; market demand</span>
+              </div>
+            </div>
+<p class="mb-0 mt-3" style="font-size:0.67rem;color:var(--text-muted);line-height:1.5;">
+            <i class="fas fa-info-circle text-primary me-1"></i>
+            Based on ML model trained on JobStreet Malaysia listings.
+          </p>
+          </div>
+          
+        </div>
+        {% endif %}
+
+      </div>
+    </div>
+  </section>
+</main>
+
+{% include 'footer.html' %}
+
+<button class="scroll-top" id="scrollTop" title="Back to top">
+  <i class="fas fa-arrow-up"></i>
+</button>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+<script src="{{ url_for('static', filename='js/script.js') }}"></script>
+
+{% if avg_salary %}
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    const predictorSection = document.getElementById("predictor-tool");
+    if (predictorSection) {
+      // Skrol ke bahagian prediction secara automatik & lancar (smooth)
+      predictorSection.scrollIntoView({ behavior: "smooth" });
+    }
+  });
+</script>
+{% endif %}
+
+</body>
+</html>
